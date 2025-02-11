@@ -27,7 +27,7 @@ export interface PerformanceError {
 export interface PerformancePlugin {
   name: string;
   beforeRecord?(metric: PerformanceMetric): PerformanceMetric | void;
-  afterRecord?(metric: PerformanceMetric): void;
+  afterRecord?(metric: PerformanceMetric): PerformanceMetric | void;
 }
 
 export class PerformanceMetricError extends Error {

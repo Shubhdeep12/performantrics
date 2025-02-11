@@ -1,7 +1,7 @@
-import { PerformanceMetric, PerformancePlugin } from "../core/types";
+import { PerformanceMetric } from "../core/types";
 import { BasePlugin } from "./BasePlugin";
 
-export class ConsoleLoggerPlugin extends BasePlugin implements PerformancePlugin {
+export class ConsoleLoggerPlugin extends BasePlugin {
   name = 'ConsoleLogger';
 
   beforeRecord(metric: PerformanceMetric) {

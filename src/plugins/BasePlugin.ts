@@ -1,6 +1,6 @@
-import { PerformanceMetric } from '../core/types';
+import { PerformanceMetric, PerformancePlugin } from '../core/types';
 
-export abstract class BasePlugin {
+export abstract class BasePlugin implements PerformancePlugin {
   abstract readonly name: string;
 
   beforeRecord?(metric: PerformanceMetric): PerformanceMetric | void {
