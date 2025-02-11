@@ -15,7 +15,7 @@ import {
   ErrorCodes,
 } from "./errors";
 
-export class PerformanceMetricsSdk {
+export class Performantrics {
   private config: PerformanceConfig;
   private metrics: PerformanceMetric[] = [];
   private errors: PerformanceError[] = [];

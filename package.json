@@ -1,17 +1,19 @@
 {
-  "name": "performance-metrics-sdk",
+  "name": "performantrics",
   "version": "1.0.0",
-  "description": "Web Performance Metrics SDK",
+  "description": "Advanced Web Performance Metrics SDK for real-time monitoring and analysis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "assets"
   ],
   "scripts": {
     "build": "tsc",
     "test": "jest",
     "lint": "eslint src --ext .ts",
-    "docs": "typedoc"
+    "docs": "typedoc",
+    "generate-assets": "ts-node scripts/generate-images.ts"
   },
   "dependencies": {
     "uuid": "^9.0.0"
@@ -28,6 +30,7 @@
     "eslint": "^8.35.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.7.0",
+    "sharp": "^0.33.5",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2",
     "typedoc": "^0.24.0",
@@ -37,12 +40,18 @@
     "performance",
     "metrics",
     "monitoring",
-    "web"
+    "web-vitals",
+    "analytics",
+    "performance-monitoring",
+    "web-performance"
   ],
-  "author": "Your Name",
+  "author": "Shubhdeep Chhabra",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shubhdeep12/performance-metrics-sdk"
+    "url": "https://github.com/shubhdeep12/performantrics"
+  },
+  "logo": {
+    "src": "assets/logo/performantrics-logo.svg"
   }
 }

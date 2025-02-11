@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { PerformanceMetricsSdk } from '../../src/core/performanceMetricsSdk';
+import { Performantrics } from '../../src/core/performantrics';
 import { ConsoleLoggerPlugin } from '../../src/plugins/ConsoleLoggerPlugin';
 import { PerformanceMetric, PerformancePlugin } from '../../src/core/types';
 import { PerformanceMetricError, ErrorCodes } from '../../src/core/errors';
@@ -26,8 +26,8 @@ class TestPlugin implements PerformancePlugin {
   }
 }
 
-describe('PerformanceMetricsSdk', () => {
-  let sdk: PerformanceMetricsSdk;
+describe('Performantrics', () => {
+  let sdk: Performantrics;
   let consolePlugin: ConsoleLoggerPlugin;
   let testPlugin: TestPlugin;
 
@@ -35,7 +35,7 @@ describe('PerformanceMetricsSdk', () => {
     jest.spyOn(console, 'log').mockImplementation();
     jest.spyOn(console, 'error').mockImplementation();
     
-    sdk = new PerformanceMetricsSdk({
+    sdk = new Performantrics({
       projectId: 'test-project',
       debugMode: true
     });
@@ -89,7 +89,7 @@ describe('PerformanceMetricsSdk', () => {
       const errorSpy = jest.spyOn(console, 'error');
       global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
 
-      sdk = new PerformanceMetricsSdk({
+      sdk = new Performantrics({
         endpoint: 'http://test-endpoint'
       });
 

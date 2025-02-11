@@ -16,7 +16,7 @@ Performance Metrics SDK is a lightweight, extensible JavaScript library for coll
 ## Installation
 
 ```bash
-npm install performance-metrics-sdk
+npm install performantrics
 ```
 
 ## Quick Start
@@ -24,10 +24,10 @@ npm install performance-metrics-sdk
 ### Basic Usage
 
 ```typescript
-import PerformanceMetricsSdk from 'performance-metrics-sdk';
+import Performantrics from 'performantrics';
 
 // Initialize with basic configuration
-const tracker = new PerformanceMetricsSdk({
+const tracker = new Performantrics({
   projectId: 'my-project',
   endpoint: 'https://metrics-collector.com/track',
   debugMode: true
@@ -42,7 +42,7 @@ tracker.endCustomMeasure('login-process');
 ### Advanced Configuration
 
 ```typescript
-const tracker = new PerformanceMetricsSdk({
+const tracker = new Performantrics({
   projectId: 'my-project',
   endpoint: 'https://metrics-collector.com/track',
   debugMode: true,
@@ -60,26 +60,7 @@ const tracker = new PerformanceMetricsSdk({
 
 ### Creating a Custom Plugin
 
-```typescript
-import { PerformancePlugin } from 'performance-metrics-sdk';
-
-class MyCustomPlugin implements PerformancePlugin {
-  name = 'CustomLogger';
-
-  beforeRecord(metric) {
-    console.log('Pre-processing metric', metric);
-    return metric;
-  }
-
-  afterRecord(metric) {
-    // Additional logging or processing
-    console.log('Metric recorded', metric);
-  }
-}
-
-// Use the plugin
-tracker.use(new MyCustomPlugin());
-```
+[Custom Plugin Example](./docs/CustomPluginExample.md)
 
 ## API Reference
 

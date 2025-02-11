@@ -1,15 +1,16 @@
 import { PerformanceMetric, PerformancePlugin } from "../core/types";
+import { BasePlugin } from "./BasePlugin";
 
-export class ConsoleLoggerPlugin implements PerformancePlugin {
+export class ConsoleLoggerPlugin extends BasePlugin implements PerformancePlugin {
   name = 'ConsoleLogger';
 
   beforeRecord(metric: PerformanceMetric) {
-    console.log(`Pre-processing metric: ${metric.name}`);
+    this.log('info', `Pre-processing metric: ${metric.name}`);
     return metric;
   }
 
   afterRecord(metric: PerformanceMetric) {
-    console.log(`Recorded metric: ${metric.name}`, metric);
+    this.log('info', `Recorded metric: ${metric.name}`, metric);
   }
 }
 
