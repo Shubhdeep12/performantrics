@@ -1,3 +1,5 @@
+<img src="./assets/logo/performantrics-logo.svg" width="100%" height="250px">
+
 # Performance Metrics SDK
 
 ## Overview
