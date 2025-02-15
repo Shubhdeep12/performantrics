@@ -194,7 +194,7 @@ export class Performantrics {
     const measure = performance.getEntriesByName(name)[0];
     this.recordMetric({
       name,
-      value: measure.duration,
+      value: measure?.duration ?? 0,
       category: "custom",
       metadata,
     });

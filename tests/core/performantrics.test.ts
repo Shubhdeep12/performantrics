@@ -1,4 +1,5 @@
 import { BasePlugin, ConsoleLoggerPlugin, PerformanceMetric, Performantrics } from "../../src";
+import * as browserCompatibility from '../../src/utils/browserCompatibility';
 
 jest.mock('uuid', () => ({
   v4: () => 'test-uuid'
@@ -39,9 +40,6 @@ describe('Performantrics SDK', () => {
   
   beforeEach(() => {
     jest.clearAllMocks();
-    // Reset performance entries
-    // performance.clearMarks();
-    // performance.clearMeasures();
   });
 
   describe('Constructor & Configuration', () => {
@@ -214,23 +212,6 @@ describe('Performantrics SDK', () => {
       );
     });
 
-    // it('should track unhandled promise rejections', () => {
-    //   const promiseRejectionEvent = new PromiseRejectionEvent('unhandledrejection', {
-    //     promise: Promise.reject(new Error('Test rejection')),
-    //     reason: new Error('Test rejection'),
-    //   });
-
-    //   window.dispatchEvent(promiseRejectionEvent);
-  
-
-    //   expect(mockConsole.error).toHaveBeenCalledWith(
-    //     'Tracked Error:',
-    //     expect.objectContaining({
-    //       message: 'Test rejection',
-    //       timestamp: expect.any(Number),
-    //     })
-    //   );
-    // });
   });
 
   describe('Cleanup', () => {
@@ -267,4 +248,101 @@ describe('Performantrics SDK', () => {
       expect(sdk.getMetrics()).toHaveLength(0);
     });
   });
+
+
+  describe('Custom Measurements', () => {
+    beforeEach(() => {
+      sdk = new Performantrics({ debugMode: true });
+      performance.clearMarks();
+      performance.clearMeasures();
+    });
+  
+    it('should handle custom measure start and end', () => {
+      const measureName = 'test-measure';
+      const metadata = { test: true };
+  
+      sdk.startCustomMeasure(measureName, metadata);
+      // Simulate some elapsed time if needed (or use fake timers)
+      sdk.endCustomMeasure(measureName, metadata);
+  
+      const metrics = sdk.getMetrics();
+      const startMetric = metrics.find(m => m.name === `${measureName}-start`);
+      const measureMetric = metrics.find(m => m.name === measureName);
+  
+      expect(startMetric).toBeDefined();
+      expect(measureMetric).toBeDefined();
+      expect(measureMetric?.category).toBe('custom');
+      expect(measureMetric?.value).toBeGreaterThanOrEqual(0);
+    });
+  });
+  
+
+  describe('Unhandled Rejection Error Tracking', () => {
+    beforeEach(() => {
+      sdk = new Performantrics({ debugMode: true });
+    });
+
+    it('should track unhandled promise rejections', () => {
+      const rejectionError = new Error('Unhandled rejection error');
+      const unhandledRejectionEvent = new PromiseRejectionEvent('unhandledrejection', {
+        promise: Promise.resolve(), // dummy promise to satisfy the type requirement
+        reason: rejectionError,
+      });
+
+      window.dispatchEvent(unhandledRejectionEvent);
+
+      expect(mockConsole.error).toHaveBeenCalledWith(
+        'Tracked Error:',
+        expect.objectContaining({
+          message: 'Unhandled rejection error',
+        })
+      );
+    });
+  });
+
+  describe('Sampling Functionality', () => {
+    it('should not record metrics when sampleRate is 0', () => {
+      sdk = new Performantrics({ sampleRate: 0 });
+      sdk.recordMetric({ name: 'sample-metric', value: 50, category: 'custom' });
+      expect(sdk.getMetrics()).toHaveLength(0);
+    });
+  });
+
+  describe('Metrics Transmission Error Handling', () => {
+    it('should track error if fetch fails during metrics transmission', () => {
+      sdk = new Performantrics({
+        endpoint: 'https://api.example.com/metrics',
+        debugMode: true,
+      });
+      // Make fetch throw an error
+      (global.fetch as jest.Mock).mockImplementationOnce(() => {
+        throw new Error('Fetch failed');
+      });
+
+      sdk.recordMetric({ name: 'transmission-metric', value: 100, category: 'custom' });
+      
+      expect(mockConsole.error).toHaveBeenCalledWith(
+        'Tracked Error:',
+        expect.objectContaining({
+          message: 'Metrics transmission failed',
+        })
+      );
+    });
+  });
+
+  describe('Browser Compatibility Warning', () => {
+    beforeAll(() => {
+      jest.spyOn(browserCompatibility, 'checkBrowserCompatibility').mockReturnValue(false);
+    });
+  
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+  
+    it('should warn if browser does not fully support Performance API', () => {
+      sdk = new Performantrics();
+      expect(mockConsole.warn).toHaveBeenCalledWith('Browser does not fully support Performance SDK');
+    });
+  });
+
 });
