@@ -1,6 +1,6 @@
 {
   "name": "performantrics",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Advanced Web Performance Metrics SDK for real-time monitoring and analysis",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
