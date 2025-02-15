@@ -1,0 +1,54 @@
+name: Release on Package Version Bump
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+
+  workflow_dispatch: 
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Check Version Bump
+        id: check_version
+        run: |
+          # Fetch the previous commit to compare package.json versions
+          git fetch --depth=2
+          PREV_VERSION=$(git show HEAD~1:package.json | jq -r '.version')
+          CURR_VERSION=$(jq -r '.version' package.json)
+          echo "Previous version: $PREV_VERSION"
+          echo "Current version: $CURR_VERSION"
+          if [ "$PREV_VERSION" != "$CURR_VERSION" ]; then
+            echo "Version bump detected"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No version bump detected. Skipping publish."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Package
+        if: steps.check_version.outputs.changed == 'true'
+        run: npm run build
+
+      - name: Publish Package
+        if: steps.check_version.outputs.changed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
