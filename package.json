@@ -47,10 +47,7 @@
   ],
   "author": "Shubhdeep Chhabra",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/shubhdeep12/performantrics"
-  },
+  "repository": "github:shubhdeep12/performantrics",
   "logo": {
     "src": "assets/logo/performantrics-logo.svg"
   }
